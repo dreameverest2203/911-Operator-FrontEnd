@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@googlemaps/react-wrapper": "^1.1.23",
+    "@googlemaps/typescript-guards": "^1.0.6",
+    "fast-equals": "^2.0.4",
+    "google": "^2.1.0",
+    "google-maps-react": "^2.0.6"
+  }
+}

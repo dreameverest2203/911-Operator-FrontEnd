@@ -3,6 +3,11 @@ import axios from 'axios';
 import React,{Component} from 'react';
 import './App.css';
 import Button from '@material-ui/core/Button';
+import MapContainer from './MapContainer';
+
+// export default GoogleApiWrapper({
+//   apiKey: 'TOKEN HERE'
+// })(MapContainer);
 
 
 class App extends Component {
@@ -11,7 +16,9 @@ class App extends Component {
  
       // Initially, no file is selected
       selectedFile: null,
-      transcription: null
+      transcription: null,
+      lat: 37.4275,
+      lng: -122.1697,
     };
     
     // On file select (from the pop up)
@@ -51,7 +58,6 @@ class App extends Component {
     fileData = () => {
     
       if (this.state.selectedFile) {
-         
         return (
           <div>
             <h2 className='center'>File Details:</h2>
@@ -98,6 +104,14 @@ class App extends Component {
         );
       }
     };
+
+    getMap = () => {
+      return (
+        <div className='center'>
+          <MapContainer className='center' lat={this.state.lat} lng={this.state.lng}></MapContainer>
+        </div>
+      ) 
+    }
     
     render() {
     
@@ -120,6 +134,7 @@ class App extends Component {
             </div>
           {this.fileData()}
           {this.getTranscription()}
+          {this.getMap()}
         </div>
       );
     }
