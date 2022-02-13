@@ -10,7 +10,8 @@ class App extends Component {
     state = {
  
       // Initially, no file is selected
-      selectedFile: null
+      selectedFile: null,
+      transcription: null
     };
     
     // On file select (from the pop up)
@@ -39,7 +40,10 @@ class App extends Component {
     
       // Request made to the backend api
       // Send formData object
-      axios.post("http://localhost:5000/transcribe", formData);
+      axios.post('http://localhost:5000/transcribe', formData)
+      .then(
+          res=>this.setState({transcription: res.data})
+      )
     };
     
     // File content to be displayed after
@@ -74,6 +78,26 @@ class App extends Component {
         );
       }
     };
+
+    getTranscription = () => {
+    
+      if (this.state.transcription) {
+         
+        return (
+          <div>
+            <h2 className='center'>File Transcription:</h2>
+             
+              <p className='center' id='text-margin'>{this.state.transcription}</p>
+ 
+          </div>
+        );
+      } else {
+        return (
+          <div className='center'>
+          </div>
+        );
+      }
+    };
     
     render() {
     
@@ -95,6 +119,7 @@ class App extends Component {
                 </Button>
             </div>
           {this.fileData()}
+          {this.getTranscription()}
         </div>
       );
     }
