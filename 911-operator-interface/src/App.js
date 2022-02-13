@@ -5,11 +5,6 @@ import './App.css';
 import Button from '@material-ui/core/Button';
 import MapContainer from './MapContainer';
 
-// export default GoogleApiWrapper({
-//   apiKey: 'TOKEN HERE'
-// })(MapContainer);
-
-
 class App extends Component {
   
     state = {
@@ -19,6 +14,7 @@ class App extends Component {
       transcription: null,
       lat: 37.4275,
       lng: -122.1697,
+      raw_ner: null,
     };
     
     // On file select (from the pop up)
@@ -48,9 +44,33 @@ class App extends Component {
       // Request made to the backend api
       // Send formData object
       axios.post('http://localhost:5000/transcribe', formData)
-      .then(
-          res=>this.setState({transcription: res.data})
-      )
+      .then(res => {
+        this.setState({transcription: res.data});
+        if (res.data) {
+          const transcriptionData = new FormData()
+          transcriptionData.append(
+            "transcription",
+            res.data,
+          )
+          axios.post('http://localhost:5000/recognize', transcriptionData)
+          .then(
+            res_ner => {
+              this.setState({raw_ner: res_ner})
+            }
+          )
+        }
+      }); 
+      // const transcriptionData = new FormData()
+      // transcriptionData.append(
+      //   "transcription",
+      //   "HELLO HELLO HELLO",
+      // )
+      // axios.post('http://localhost:5000/recognize', transcriptionData)
+      // .then(
+      //   res_ner => {
+      //     this.setState({raw_ner: res_ner})
+      //   }
+      // );      
     };
     
     // File content to be displayed after
@@ -105,6 +125,12 @@ class App extends Component {
       }
     };
 
+    getNER = () => {
+      if (this.state.raw_ner) {
+        console.log(this.state.raw_ner)
+      }
+    }
+
     getMap = () => {
       return (
         <div className='center'>
@@ -134,6 +160,7 @@ class App extends Component {
             </div>
           {this.fileData()}
           {this.getTranscription()}
+          {this.getNER()}
           {this.getMap()}
         </div>
       );
