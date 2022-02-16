@@ -127,7 +127,14 @@ class App extends Component {
 
     getNER = () => {
       if (this.state.raw_ner) {
-        console.log(this.state.raw_ner)
+        return (
+          <div>
+              <h2 className='center'>Named Entities Found: </h2>
+              
+              <p className='center' id='text-margin'>Address: {this.state.raw_ner.data.address.mentions[0].text.content}</p>
+  
+          </div>
+        )
       }
     }
 
