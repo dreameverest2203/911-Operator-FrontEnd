@@ -140,7 +140,7 @@ class App extends Component {
     getMap = () => {
       return (
         <div className='center'>
-          <MapContainer className='center' lat={this.state.lat} lng={this.state.lng}></MapContainer>
+          <MapContainer className='center' lat={this.state.lat} lng={this.state.lng} isMarkerShown={true} />
         </div>
       ) 
     }
