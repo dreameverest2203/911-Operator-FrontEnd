@@ -56,25 +56,25 @@ class App extends Component {
           .then(
             res_ner => {
               this.setState({raw_ner: res_ner})
+              if (this.state.raw_ner) {
+
+                formData.append(
+                  "location",
+                  this.state.raw_ner.data.address
+                );
+                axios.post('http://localhost:5000/coordinates', formData)
+                .then(res => {
+                  this.setState({lat: res.data.lat});
+                  this.setState({lng: res.data.lng});
+                });
+
+              }
             }
           )
         }
-      }); 
-      // const transcriptionData = new FormData()
-      // transcriptionData.append(
-      //   "transcription",
-      //   "HELLO HELLO HELLO",
-      // )
-      // axios.post('http://localhost:5000/recognize', transcriptionData)
-      // .then(
-      //   res_ner => {
-      //     this.setState({raw_ner: res_ner})
-      //   }
-      // );      
+      });  
     };
-    
-    // File content to be displayed after
-    // file upload is complete
+
     fileData = () => {
     
       if (this.state.selectedFile) {
@@ -108,7 +108,6 @@ class App extends Component {
     getTranscription = () => {
     
       if (this.state.transcription) {
-         
         return (
           <div>
             <h2 className='center'>File Transcription:</h2>
