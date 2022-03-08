@@ -168,6 +168,7 @@ class App extends Component {
           {this.getTranscription()}
           {this.getNER()}
           {this.getMap()}
+          <br></br>
         </div>
       );
     }
