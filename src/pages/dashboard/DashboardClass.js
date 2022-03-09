@@ -1,5 +1,7 @@
 import React, { useState, Component } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { Spinner } from 'react-bootstrap';
+
 import {
   Col,
   Row,
@@ -80,6 +82,7 @@ class Dashboard extends Component {
     translation: null,
     confidence_scores: null,
     closestHelp: {'dist': null, 'name': '---'},
+    isLoading: false
   };
 
   accessMic() {
@@ -164,6 +167,7 @@ class Dashboard extends Component {
   }
 
   analyzeTranscription = () => {
+    this.setState({isLoading: false});
     const formData = new FormData();
     let transcription = this.state.transcription;
     console.log(transcription)
@@ -243,7 +247,7 @@ class Dashboard extends Component {
 
   // On file upload (click the upload button)
   onFileUpload = event => {
-
+    this.setState({isLoading: true});
     this.state.selectedFile = event.target.files[0];
     // Create an object of formData
     const formData = new FormData();
@@ -409,7 +413,7 @@ class Dashboard extends Component {
       return (
         <div>
           <div>
-            
+
             Ask them to leave the building via stairs. <br></br>
             Ask them to avoid doors that are warm to touch.<br></br>
             Advice the callee to get low and go under the smoke.<br></br>
@@ -436,11 +440,20 @@ class Dashboard extends Component {
     }
   }
 
+  getSpinner = () => {
+    if (this.state.isLoading){
+      return (
+        <Spinner animation="border" role="status">
+        </Spinner>
+      )
+    }
+  }
+
   render() {
 
     return (
       <div style={{margin: '1em'}}>
-        <div className="headline-2" style={{marginBottom:'0.5em', marginTop:'0.5em'}}>911 Operator Assistant</div>
+        <div className="headline-2" style={{marginBottom:'0.5em', marginTop:'0.5em'}}>911 Operator Assistant {this.getSpinner()}</div>
         <div className='center' style={{marginBottom:'1em'}}>
           <Row>
             <Col/>
@@ -557,7 +570,7 @@ class Dashboard extends Component {
                   <div className="d-flex">
                     <img className="img-fluid mr-2" src={adviceIcon} style={{width: "2.5em"}} alt="..." />
                     <div className="d-flex flex-column">
-                      <p className="body-2">Advice for emergencies</p> 
+                      <p className="body-2">Advice for emergencies</p>
                     </div>
                   </div>
                 </div>
@@ -566,7 +579,7 @@ class Dashboard extends Component {
                 </div>
               </div>
 
-              
+
               {/* <a className={`btn-secondary-red ${s.statsBtn}`} href="#top" role="button">
                 <img className={s.pieImg}  src={statsPie} alt="..." />
                 <div>
