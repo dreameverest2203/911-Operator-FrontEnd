@@ -24,6 +24,7 @@ import heartYellow from "../../assets/dashboard/heartYellow.svg";
 import gymIcon from "../../assets/dashboard/gymIcon.svg";
 import addressIcon from "../../assets/dashboard/addressIcon.svg";
 import therapyIcon from "../../assets/dashboard/therapyIcon.svg";
+import helpIcon from "../../assets/dashboard/helpIcon.svg";
 import emergencyIcon from "../../assets/dashboard/emergencyIcon.svg"
 import user from "../../assets/user.svg";
 import CamelCase from 'react-camelcase';
@@ -70,11 +71,15 @@ class Dashboard extends Component {
     raw_ner: null,
     emergency: null,
     isMicActive: false,
-    police: null,
-    hospital: null,
-    fire: null,
+    police: {'lat': 0, 'lng': 0, 'dist': '---'},
+    hospital: {'lat': 0, 'lng': 0, 'dist': '---'},
+    fire: {'lat': 0, 'lng': 0, 'dist': '---'},
     translation: null,
+<<<<<<< HEAD
     confidence_scores: null,
+=======
+    closestHelp: {'dist': null, 'name': '---'},
+>>>>>>> Show closest help and stats
   };
 
   accessMic() {
@@ -192,9 +197,24 @@ class Dashboard extends Component {
                   )
                   axios.post('http://localhost:5000/nearest', formData)
                     .then(res_nearest => {
-                      this.setState({ hospital: res_nearest.data.hospital });
-                      this.setState({ police: res_nearest.data.police });
-                      this.setState({ fire: res_nearest.data.fire });
+                      if (res_nearest.data.hospital.lat) {
+                        this.setState({ hospital: res_nearest.data.hospital });
+                        if (!this.state.closestHelp.dist || this.state.closestHelp.dist > parseFloat(this.state.hospital.dist)) {
+                          this.setState({closestHelp: {'dist': parseFloat(this.state.hospital.dist), 'name': this.state.hospital.name}});
+                        }
+                      }
+                      if (res_nearest.data.police.lat) {
+                        this.setState({ police: res_nearest.data.police });
+                        if (!this.state.closestHelp.dist || this.state.closestHelp.dist > parseFloat(this.state.police.dist)) {
+                          this.setState({closestHelp: {'dist': parseFloat(this.state.police.dist), 'name': this.state.police.name}});
+                        }
+                      }
+                      if (res_nearest.data.fire.lat) {
+                        this.setState({ fire: res_nearest.data.fire });
+                        if (!this.state.closestHelp.dist || this.state.closestHelp.dist > parseFloat(this.state.fire.dist)) {
+                          this.setState({closestHelp: {'dist': parseFloat(this.state.fire.dist), 'name': this.state.fire.name}});
+                        }
+                      }
                     });
                 });
 
@@ -312,9 +332,9 @@ class Dashboard extends Component {
   getNER = () => {
     if (this.state.raw_ner) {
       return (
-        <p>
-          {this.state.raw_ner.data.address}
-        </p>
+          <span>
+            {this.state.raw_ner.data.address}
+          </span>
       )
     }
   }
@@ -323,9 +343,9 @@ class Dashboard extends Component {
     if (this.state.emergency) {
       this.state.emergency = this.state.emergency.replace(/\w\S*/g, (w) => (w.replace(/^\w/, (c) => c.toUpperCase())));
       return (
-        <p>
+        <span>
           {this.state.emergency}
-        </p>
+        </span>
       )
     }
   }
@@ -480,24 +500,24 @@ class Dashboard extends Component {
           <Col className="mt-4 mt-lg-0 pl-grid-col" xs={12} lg={4}>
             <Widget className="widget-p-lg">
               <div className="d-flex">
-                <img className={s.image} src={user} alt="..." />
+                <img className={s.image} src={helpIcon} alt="..." />
                 <div className={s.userInfo}>
-                  <p className="headline-3">Christina Karey</p>
-                  <p className="body-3 muted">Brasil</p>
+                  <p className="headline-3">{this.state.closestHelp.name}</p>
+                  <p className="body-3 muted">Closest Help</p>
                 </div>
               </div>
               <div className={s.userParams}>
                 <div className="d-flex flex-column">
-                  <p className="headline-3">63 kg</p>
-                  <p className="body-3 muted">Weight</p>
+                  <p className="headline-3">{this.state.hospital.dist} km</p>
+                  <p className="body-3 muted">Hospital</p>
                 </div>
                 <div className="d-flex flex-column">
-                  <p className="headline-3">175 sm</p>
-                  <p className="body-3 muted">Height</p>
+                  <p className="headline-3">{this.state.fire.dist} km</p>
+                  <p className="body-3 muted">Fire Station</p>
                 </div>
                 <div className="d-flex flex-column">
-                  <p className="headline-3">28 y.</p>
-                  <p className="body-3 muted">Age</p>
+                  <p className="headline-3">{this.state.police.dist} km</p>
+                  <p className="body-3 muted">Police Station</p>
                 </div>
               </div>
               <div className={s.goals}>
