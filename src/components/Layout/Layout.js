@@ -11,7 +11,6 @@ import Header from "../Header/Header";
 import Sidebar from "../Sidebar/Sidebar";
 import Footer from "../Footer/Footer";
 import Breadcrumbs from "../Breadbrumbs/Breadcrumbs";
-import Dashboard from "../../pages/dashboard/Dashboard";
 import Typography from "../../pages/typography/Typography";
 import Notifications from "../../pages/notifications/Notifications";
 import Tables from "../../pages/tables/Tables";
@@ -32,7 +31,7 @@ const Layout = (props) => {
           <Breadcrumbs url={props.location.pathname} />
           <Switch>
             <Route path="/template" exact render={() => <Redirect to="template/dashboard"/>} />
-            <Route path="/template/dashboard" exact component={Dashboard}/>
+            {/* <Route path="/template/dashboard" exact component={Dashboard}/> */}
             {/* <Route path="/template/typography" exact component={Typography} /> */}
             {/* <Route path="/template/tables" exact component={Tables} />
             <Route path="/template/notifications" exact component={Notifications} />
