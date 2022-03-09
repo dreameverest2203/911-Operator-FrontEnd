@@ -37,6 +37,7 @@ class App extends Component {
     police: null,
     hospital: null,
     fire: null,
+    translation: null,
   };
 
   accessMic() {
@@ -174,6 +175,10 @@ class App extends Component {
             this.setState({ emergency: res_emergency.data.emergency })
           }
         )
+      axios.post('http://localhost:5000/translate', transcriptionData)
+        .then(res => {
+          this.setState({ translation: res.data.text });
+        });
     }
   }
 
@@ -251,6 +256,23 @@ class App extends Component {
     }
   };
 
+  getTranslation = () => {
+
+    if (this.state.translation) {
+      return (
+        <div>
+          <h2 className='center'>Call Translation:</h2>
+          <div className='new-line center' style={{ padding: 2 + "em" }}>{this.state.translation.replaceAll(".", "\n")}</div>
+        </div>
+      );
+    } else {
+      return (
+        <div className='center'>
+        </div>
+      );
+    }
+  };
+
   getNER = () => {
     if (this.state.raw_ner) {
       return (
@@ -316,6 +338,7 @@ class App extends Component {
         </div>
         {this.fileData()}
         {this.getTranscription()}
+        {this.getTranslation()}
         {this.getNER()}
         {this.getEmergency()}
         {this.getMap()}

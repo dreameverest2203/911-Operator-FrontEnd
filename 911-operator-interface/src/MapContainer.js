@@ -21,10 +21,10 @@ const MapContainer = (props) => {
         zoom={13}
         center={defaultCenter}
       >
-        <Marker position={{ lat: defaultCenter.lat, lng: defaultCenter.lng }} />
-        {defaultCenter.police ? <Marker position={{ lat: defaultCenter.police.lat, lng: defaultCenter.police.lng }} /> : ""}
-        {defaultCenter.hospital ? <Marker position={{ lat: defaultCenter.hospital.lat, lng: defaultCenter.hospital.lng }} /> : ""}
-        {defaultCenter.fire ? <Marker position={{ lat: defaultCenter.fire.lat, lng: defaultCenter.fire.lng }} /> : ""}
+        <Marker label={'C'} position={{ lat: defaultCenter.lat, lng: defaultCenter.lng }} />
+        {defaultCenter.police ? <Marker label={'P'} position={{ lat: defaultCenter.police.lat, lng: defaultCenter.police.lng }} /> : ""}
+        {defaultCenter.hospital ? <Marker label={'H'} position={{ lat: defaultCenter.hospital.lat, lng: defaultCenter.hospital.lng }} /> : ""}
+        {defaultCenter.fire ? <Marker label={'F'} position={{ lat: defaultCenter.fire.lat, lng: defaultCenter.fire.lng }} /> : ""}
       </GoogleMap>
     </LoadScript>
   )
