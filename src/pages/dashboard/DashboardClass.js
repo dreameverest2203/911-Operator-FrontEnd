@@ -24,7 +24,8 @@ import heartYellow from "../../assets/dashboard/heartYellow.svg";
 import gymIcon from "../../assets/dashboard/gymIcon.svg";
 import addressIcon from "../../assets/dashboard/addressIcon.svg";
 import adviceIcon from "../../assets/dashboard/adviceIcon.svg";
-
+import micIcon from "../../assets/dashboard/micIcon.svg";
+import micOffIcon from "../../assets/dashboard/micOffIcon.svg";
 import therapyIcon from "../../assets/dashboard/therapyIcon.svg";
 import helpIcon from "../../assets/dashboard/helpIcon.svg";
 import emergencyIcon from "../../assets/dashboard/emergencyIcon.svg"
@@ -359,6 +360,8 @@ class Dashboard extends Component {
       }
     >
       <Button className="rounded-pill body-3" outline color="dark" variant="contained">Mic Input</Button>
+      <img className="img-fluid mr-2" src={micIcon} style={{width: "2.5em"}} alt="..." />
+      <img className="img-fluid mr-2" src={micOffIcon} style={{width: "2.5em"}} alt="..." />
     </div>);
   }
 
