@@ -56,7 +56,7 @@ class Dashboard extends Component {
     this.stopAccessingMic = this.stopAccessingMic.bind(this);
     this.getTextFromGoogle = this.getTextFromGoogle.bind(this);
     // const [checkboxes, setCheckboxes] = useState([true, false])
-  
+
     // this.meals = [meal1, meal2, meal3];
   }
 
@@ -74,6 +74,7 @@ class Dashboard extends Component {
     hospital: null,
     fire: null,
     translation: null,
+    confidence_scores: null,
   };
 
   accessMic() {
@@ -194,7 +195,6 @@ class Dashboard extends Component {
                       this.setState({ hospital: res_nearest.data.hospital });
                       this.setState({ police: res_nearest.data.police });
                       this.setState({ fire: res_nearest.data.fire });
-
                     });
                 });
 
@@ -210,6 +210,7 @@ class Dashboard extends Component {
         .then(
           res_emergency => {
             this.setState({ emergency: res_emergency.data.emergency })
+            this.setState({ confidence_scores: res_emergency.data.scores })
           }
         )
       axios.post('http://localhost:5000/translate', transcriptionData)
@@ -351,6 +352,67 @@ class Dashboard extends Component {
     )
   }
 
+  getConfidenceScores = () => {
+    if (this.state.confidence_scores){
+      return (
+    <div>
+      <div className="d-flex flex-column mt-3">
+        <div className={s.activity}>
+          <p className="body-2">{this.state.confidence_scores[0][1]}</p>
+          <p className="body-2">{this.state.confidence_scores[0][0]}</p>
+        </div>
+        <Progress color="secondary-red" className="progress-xs" value={parseFloat(this.state.confidence_scores[0][0])} />
+      </div>
+      <div className="d-flex flex-column mt-3">
+        <div className={s.activity}>
+          <p className="body-2">{this.state.confidence_scores[1][1]}</p>
+          <p className="body-2">{this.state.confidence_scores[1][0]}</p>
+        </div>
+        <Progress color="secondary-yellow" className="progress-xs" value={parseFloat(this.state.confidence_scores[1][0])} />
+      </div>
+      <div className="d-flex flex-column mt-3">
+        <div className={s.activity}>
+          <p className="body-2">{this.state.confidence_scores[2][1]}</p>
+          <p className="body-2">{this.state.confidence_scores[2][0]}</p>
+        </div>
+        <Progress color="secondary-cyan" className="progress-xs" value={parseFloat(this.state.confidence_scores[2][0])} />
+      </div>
+    </div>
+      );
+    }
+  }
+
+  getEmergencyDescription = () => {
+    console.log(this.state.emergency);
+    if (this.state.emergency === "Fire") {
+      return (
+        <div>
+          <div>
+              <h6><b>If a Fire Starts:</b></h6>
+          <ul>
+          <li>Know how to <a href="https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/fire-safety-equipment.html#Fire-Extinguishers" target="Target" data-aa-link-button="safely-operate-a-fire-extinguisher">safely operate a fire extinguisher</a></li>
+          <li>Yell "Fire!" several times and go outside right away. If you live in a building with elevators, use the stairs. Leave all your things where they are and save yourself.</li>
+          <li>If closed doors or handles are warm or smoke blocks your primary escape route, use your second way out. Never open doors that are warm to the touch.</li>
+          <li>If you must escape through smoke, get low and go under the smoke to your exit. Close doors behind you.</li>
+          <li>If smoke, heat or flames block your exit routes, stay in the room with doors closed. Place a wet towel under the door and call the fire department or 9-1-1. Open a window and wave a brightly colored cloth or flashlight to signal for help.</li>
+          <li>Once you are outside, go to your meeting place and then send one person to call the fire department. If you cannot get to your meeting place, follow your family emergency communication plan.</li>
+          </ul>
+          </div>
+          <div class="description text"><h6><b>If your clothes catch on fire:</b></h6>
+          <ul>
+          <li><b><u>Stop</u></b> what you're doing.</li>
+          <li><b><u>Drop</u></b> to the ground and cover your face if you can.</li>
+          <li><b><u>Roll</u></b> over and over or back and forth until the flames go out. Running will only make the fire burn faster.</li>
+          </ul>
+          <h6><b>Once the flames are out, cool the burned skin with water for three to five minutes. Call for medical attention.</b></h6>
+          </div>
+        </div>
+      )
+    } else if (this.state.emergency) {
+      return (<div><p className='center' id='text-margin'>Emergency: {this.state.emergency}</p></div>);
+    }
+  }
+
   render() {
 
     return (
@@ -440,29 +502,9 @@ class Dashboard extends Component {
               </div>
               <div className={s.goals}>
                 <div className={s.goalsTitle}>
-                  <p className="headline-3">Your Goals</p>
+                  <p className="headline-3">Emergency type</p>
                 </div>
-                <div className="d-flex flex-column mt-3">
-                  <div className={s.activity}>
-                    <p className="body-2">Sleep</p>
-                    <p className="body-2">92<span className="body-3 muted"> / 160</span></p>
-                  </div>
-                  <Progress color="secondary-red" className="progress-xs" value={60} />
-                </div>
-                <div className="d-flex flex-column mt-3">
-                  <div className={s.activity}>
-                    <p className="body-2">Sport</p>
-                    <p className="body-2">40<span className="body-3 muted"> / 50</span></p>
-                  </div>
-                  <Progress color="secondary-yellow" className="progress-xs" value={80} />
-                </div>
-                <div className="d-flex flex-column mt-3">
-                  <div className={s.activity}>
-                    <p className="body-2">Water</p>
-                    <p className="body-2">25<span className="body-3 muted"> / 40</span></p>
-                  </div>
-                  <Progress color="secondary-cyan" className="progress-xs" value={40} />
-                </div>
+                {this.getConfidenceScores()}
               </div>
               <p className="headline-3">Critical Information</p>
               <div className={`mt-3 ${s.widgetBlock}`}>
@@ -497,6 +539,8 @@ class Dashboard extends Component {
                   </div> */}
                 </div>
               </div>
+
+              {this.getEmergencyDescription()}
               {/* <a className={`btn-secondary-red ${s.statsBtn}`} href="#top" role="button">
                 <img className={s.pieImg}  src={statsPie} alt="..." />
                 <div>
