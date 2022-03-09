@@ -76,6 +76,7 @@ class Dashboard extends Component {
     raw_ner: null,
     emergency: null,
     isMicActive: false,
+    isMicOn: false,
     police: {'lat': 0, 'lng': 0, 'dist': '---'},
     hospital: {'lat': 0, 'lng': 0, 'dist': '---'},
     fire: {'lat': 0, 'lng': 0, 'dist': '---'},
@@ -138,6 +139,7 @@ class Dashboard extends Component {
   handleClick() {
     const isMicActive = this.state.isMicActive;
 
+    this.setState({isMicOn: !this.state.isMicOn});
     this.state.isMicActive = !isMicActive;
 
     if (!isMicActive) {
@@ -354,6 +356,14 @@ class Dashboard extends Component {
     }
   }
 
+  getMicIcon() {
+    if (this.state.isMicOn){
+      return (<img className="img-fluid mr-2" src={micIcon} style={{width: "2.5em"}} alt="..." />);
+    } else {
+      return (<img className="img-fluid mr-2" src={micOffIcon} style={{width: "2.5em"}} alt="..." />);
+    }
+  }
+
   getMicButton() {
     return (<div
       id='mic'
@@ -364,8 +374,7 @@ class Dashboard extends Component {
       }
     >
       <Button className="rounded-pill body-3" outline color="dark" variant="contained">Mic Input</Button>
-      <img className="img-fluid mr-2" src={micIcon} style={{width: "2.5em"}} alt="..." />
-      <img className="img-fluid mr-2" src={micOffIcon} style={{width: "2.5em"}} alt="..." />
+      {this.getMicIcon()}
     </div>);
   }
 
