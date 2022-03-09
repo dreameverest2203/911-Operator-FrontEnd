@@ -33,7 +33,7 @@ class App extends Component {
       lng: -122.1697,
       raw_ner: null,
       emergency: null,
-      isMicActive: false
+      isMicActive: false,
     };
 
     accessMic() {
@@ -64,9 +64,17 @@ class App extends Component {
     getTextFromGoogle(blob) {
       let filename = new Date().toISOString();
       let xhr = new XMLHttpRequest();
-      xhr.onload = function(e) {
+      let appObject = this;
+      xhr.onload = function(e) {  
         if (this.readyState === 4) {
           console.log(e.target.responseText);
+          let newTranscription = ""
+          if (appObject.state.transcription) {
+            newTranscription = appObject.state.transcription + ". " + e.target.responseText;
+          } else {
+            newTranscription = e.target.responseText;
+          }
+          appObject.setState({'transcription': newTranscription});
         }
       };
       let formData = new FormData();
@@ -108,17 +116,18 @@ class App extends Component {
         });
     }
 
-    // On file select (from the pop up)
-    onFileChange = event => {
+    // // On file select (from the pop up)
+    // onFileChange = event => {
 
-      // Update the state
-      this.setState({ selectedFile: event.target.files[0] });
+    //   // Update the state
+    //   this.setState({ selectedFile: event.target.files[0] });
 
-    };
+    // };
 
     // On file upload (click the upload button)
-    onFileUpload = () => {
+    onFileUpload = event => {
 
+      this.state.selectedFile = event.target.files[0];
       // Create an object of formData
       const formData = new FormData();
 
@@ -162,7 +171,12 @@ class App extends Component {
               }
             }
           )
-          axios.post('http://localhost:5000/emergency', transcriptionData)
+          const smallTranscription = new FormData()
+          smallTranscription.append(
+            "transcription",
+            res.data.toLowerCase(),
+          )
+          axios.post('http://localhost:5000/emergency', smallTranscription)
           .then(
             res_emergency => {
               this.setState({emergency: res_emergency.data.emergency})
@@ -208,9 +222,7 @@ class App extends Component {
         return (
           <div>
             <h2 className='center'>File Transcription:</h2>
-              <div className='new-line center'>{this.state.transcription.replaceAll(".", "\n")}</div>
-              {/* <p className='center' id='text-margin'>{this.state.transcription.split(".").map((item) => {item}<br></br> )}</p> */}
-
+              <div className='new-line center' style={{padding: 2 + "em"}}>{this.state.transcription.replaceAll(".", "\n")}</div>
           </div>
         );
       } else {
@@ -261,7 +273,7 @@ class App extends Component {
           this.state.isMicActive ? 'mic-btn mic-btn-active' : 'mic-btn'
         }
       >
-        <button>Mic Check</button>
+        <Button variant="contained">Mic Input</Button>
       </div>);
     }
 
@@ -278,11 +290,9 @@ class App extends Component {
             <div className='center'>
                 <Button variant="contained" component="label" id='button-margin'>
                   Upload File
-                <input type="file" hidden onChange={this.onFileChange} />
+                <input type="file" hidden onChange={this.onFileUpload} />
                 </Button>
-                <Button variant="contained" onClick={this.onFileUpload}>
-                  Upload!
-                </Button>
+                {this.getMicButton()}
             </div>
           {this.fileData()}
           {this.getTranscription()}
@@ -290,7 +300,7 @@ class App extends Component {
           {this.getEmergency()}
           {this.getMap()}
           <br></br>
-          {this.getMicButton()}
+          
         </div>
       );
     }
