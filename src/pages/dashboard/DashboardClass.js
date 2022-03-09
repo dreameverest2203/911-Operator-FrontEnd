@@ -23,6 +23,8 @@ import heartViolet from "../../assets/dashboard/heartViolet.svg";
 import heartYellow from "../../assets/dashboard/heartYellow.svg";
 import gymIcon from "../../assets/dashboard/gymIcon.svg";
 import addressIcon from "../../assets/dashboard/addressIcon.svg";
+import adviceIcon from "../../assets/dashboard/adviceIcon.svg";
+
 import therapyIcon from "../../assets/dashboard/therapyIcon.svg";
 import helpIcon from "../../assets/dashboard/helpIcon.svg";
 import emergencyIcon from "../../assets/dashboard/emergencyIcon.svg"
@@ -400,29 +402,30 @@ class Dashboard extends Component {
   }
 
   getEmergencyDescription = () => {
-    console.log(this.state.emergency);
     if (this.state.emergency === "Fire") {
       return (
         <div>
           <div>
-              <h6><b>If a Fire Starts:</b></h6>
-          <ul>
-          <li>Know how to <a href="https://www.redcross.org/get-help/how-to-prepare-for-emergencies/types-of-emergencies/fire/fire-safety-equipment.html#Fire-Extinguishers" target="Target" data-aa-link-button="safely-operate-a-fire-extinguisher">safely operate a fire extinguisher</a></li>
-          <li>Yell "Fire!" several times and go outside right away. If you live in a building with elevators, use the stairs. Leave all your things where they are and save yourself.</li>
-          <li>If closed doors or handles are warm or smoke blocks your primary escape route, use your second way out. Never open doors that are warm to the touch.</li>
-          <li>If you must escape through smoke, get low and go under the smoke to your exit. Close doors behind you.</li>
-          <li>If smoke, heat or flames block your exit routes, stay in the room with doors closed. Place a wet towel under the door and call the fire department or 9-1-1. Open a window and wave a brightly colored cloth or flashlight to signal for help.</li>
-          <li>Once you are outside, go to your meeting place and then send one person to call the fire department. If you cannot get to your meeting place, follow your family emergency communication plan.</li>
-          </ul>
+            
+            Ask them to leave the building via stairs. <br></br>
+            Ask them to avoid doors that are warm to touch.<br></br>
+            Advice the callee to get low and go under the smoke.<br></br>
+            Advice them to wave a brightly colored cloth or flashlight to signal for help.
+            {/* <ul>
+            <li>Ask them to leave the building via stairs.</li>
+            <li>Ask them to avoid doors that are warm to touch.</li>
+            <li>Advice the callee to get low and go under the smoke.</li>
+            <li>Advice them to wave a brightly colored cloth or flashlight to signal for help.</li>
+            </ul> */}
           </div>
-          <div class="description text"><h6><b>If your clothes catch on fire:</b></h6>
-          <ul>
-          <li><b><u>Stop</u></b> what you're doing.</li>
-          <li><b><u>Drop</u></b> to the ground and cover your face if you can.</li>
-          <li><b><u>Roll</u></b> over and over or back and forth until the flames go out. Running will only make the fire burn faster.</li>
-          </ul>
-          <h6><b>Once the flames are out, cool the burned skin with water for three to five minutes. Call for medical attention.</b></h6>
-          </div>
+          {/* <div>
+            <p>If their clothes catch on fire, advice them to:</p>
+            <ul>
+            <li>Stop what you're doing.</li>
+            <li>Drop to the ground.</li>
+            <li>Roll over and over or back and forth until the flames go out.</li>
+            </ul>
+          </div> */}
         </div>
       )
     } else if (this.state.emergency) {
@@ -544,20 +547,23 @@ class Dashboard extends Component {
                       <p className="body-3 muted">Callee's Emergency</p>
                     </div>
                   </div>
-                  {/* <div className="checkbox checkbox-primary">
-                    <input
-                      id="checkbox1"
-                      type="checkbox"
-                      className="styled"
-                      checked={checkboxes[1]}
-                      onChange={() => toggleCheckbox(1)}
-                    />
-                    <label htmlFor="checkbox1" />
-                  </div> */}
+                </div>
+              </div>
+              <div className={`mt-3 ${s.widgetBlock}`} style={{backgroundColor: '#b0e0e6'}}>
+                <div className={s.widgetBody}>
+                  <div className="d-flex">
+                    <img className="img-fluid mr-2" src={adviceIcon} style={{width: "2.5em"}} alt="..." />
+                    <div className="d-flex flex-column">
+                      <p className="body-2">Advice for emergencies</p> 
+                    </div>
+                  </div>
+                </div>
+                <div className={s.widgetBody}>
+                  {this.getEmergencyDescription()}
                 </div>
               </div>
 
-              {this.getEmergencyDescription()}
+              
               {/* <a className={`btn-secondary-red ${s.statsBtn}`} href="#top" role="button">
                 <img className={s.pieImg}  src={statsPie} alt="..." />
                 <div>
