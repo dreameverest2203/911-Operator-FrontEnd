@@ -15,6 +15,7 @@ class App extends Component {
       lat: 37.4275,
       lng: -122.1697,
       raw_ner: null,
+      emergency: null
     };
     
     // On file select (from the pop up)
@@ -69,6 +70,12 @@ class App extends Component {
                 });
 
               }
+            }
+          )
+          axios.post('http://localhost:5000/emergency', transcriptionData)
+          .then(
+            res_emergency => {
+              this.setState({emergency: res_emergency.data.emergency})
             }
           )
         }
@@ -136,6 +143,16 @@ class App extends Component {
         )
       }
     }
+    getEmergency = () => {
+      if (this.state.emergency) {
+        return (
+          <div>              
+              <p className='center' id='text-margin'>Emergency: {this.state.emergency}</p>
+  
+          </div>
+        )
+      }
+    }
 
     getMap = () => {
       return (
@@ -167,6 +184,7 @@ class App extends Component {
           {this.fileData()}
           {this.getTranscription()}
           {this.getNER()}
+          {this.getEmergency()}
           {this.getMap()}
           <br></br>
         </div>
