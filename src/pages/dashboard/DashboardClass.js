@@ -75,11 +75,8 @@ class Dashboard extends Component {
     hospital: {'lat': 0, 'lng': 0, 'dist': '---'},
     fire: {'lat': 0, 'lng': 0, 'dist': '---'},
     translation: null,
-<<<<<<< HEAD
     confidence_scores: null,
-=======
     closestHelp: {'dist': null, 'name': '---'},
->>>>>>> Show closest help and stats
   };
 
   accessMic() {
