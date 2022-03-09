@@ -2,25 +2,31 @@ import React from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const MapContainer = (props) => {
-  
-  const mapStyles = {        
+
+  const mapStyles = {
     height: "50vh",
-    width: "50%"};
-  
+    width: "50%"
+  };
+  console.log(props);
   const defaultCenter = {
-    lat: props.lat, lng: props.lng
+    lat: props.lat, lng: props.lng, police: props.police, hospital: props.hospital, fire: props.fire
   }
-  
+
+  console.log(defaultCenter);
+
   return (
-     <LoadScript googleMapsApiKey='AIzaSyBHDIhLweDpPRPyiQt2U62EhnT1bSe5c6c'>
-        <GoogleMap
-          mapContainerStyle={mapStyles}
-          zoom={13}
-          center={defaultCenter}
-        >
-          <Marker position={{ lat: defaultCenter.lat, lng: defaultCenter.lng }} />
-        </GoogleMap>
-     </LoadScript>
+    <LoadScript googleMapsApiKey='AIzaSyBHDIhLweDpPRPyiQt2U62EhnT1bSe5c6c'>
+      <GoogleMap
+        mapContainerStyle={mapStyles}
+        zoom={13}
+        center={defaultCenter}
+      >
+        <Marker position={{ lat: defaultCenter.lat, lng: defaultCenter.lng }} />
+        {defaultCenter.police ? <Marker position={{ lat: defaultCenter.police.lat, lng: defaultCenter.police.lng }} /> : ""}
+        {defaultCenter.hospital ? <Marker position={{ lat: defaultCenter.hospital.lat, lng: defaultCenter.hospital.lng }} /> : ""}
+        {defaultCenter.fire ? <Marker position={{ lat: defaultCenter.fire.lat, lng: defaultCenter.fire.lng }} /> : ""}
+      </GoogleMap>
+    </LoadScript>
   )
 }
 
