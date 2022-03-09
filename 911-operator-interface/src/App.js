@@ -75,6 +75,7 @@ class App extends Component {
             newTranscription = e.target.responseText;
           }
           appObject.setState({'transcription': newTranscription});
+          appObject.analyzeTranscription();
         }
       };
       let formData = new FormData();
@@ -116,13 +117,48 @@ class App extends Component {
         });
     }
 
-    // // On file select (from the pop up)
-    // onFileChange = event => {
+    analyzeTranscription = () => {
+      const formData = new FormData();
+      let transcription = this.state.transcription;
+      if (transcription) {
+        const transcriptionData = new FormData()
+        transcriptionData.append(
+          "transcription",
+          transcription,
+        )
+        axios.post('http://localhost:5000/recognize', transcriptionData)
+        .then(
+          res_ner => {
+            this.setState({raw_ner: res_ner})
+            if (this.state.raw_ner) {
 
-    //   // Update the state
-    //   this.setState({ selectedFile: event.target.files[0] });
+              formData.append(
+                "location",
+                this.state.raw_ner.data.address
+              );
+              axios.post('http://localhost:5000/coordinates', formData)
+              .then(res => {
+                this.setState({lat: res.data.lat});
+                this.setState({lng: res.data.lng});
+              });
 
-    // };
+            }
+          }
+        )
+        const smallTranscription = new FormData()
+        smallTranscription.append(
+          "transcription",
+          transcription.toLowerCase(),
+        )
+        axios.post('http://localhost:5000/emergency', smallTranscription)
+        .then(
+          res_emergency => {
+            this.setState({emergency: res_emergency.data.emergency})
+          }
+        )
+      }
+    }
+
 
     // On file upload (click the upload button)
     onFileUpload = event => {
@@ -146,43 +182,7 @@ class App extends Component {
       axios.post('http://localhost:5000/transcribe', formData)
       .then(res => {
         this.setState({transcription: res.data});
-        if (res.data) {
-          const transcriptionData = new FormData()
-          transcriptionData.append(
-            "transcription",
-            res.data,
-          )
-          axios.post('http://localhost:5000/recognize', transcriptionData)
-          .then(
-            res_ner => {
-              this.setState({raw_ner: res_ner})
-              if (this.state.raw_ner) {
-
-                formData.append(
-                  "location",
-                  this.state.raw_ner.data.address
-                );
-                axios.post('http://localhost:5000/coordinates', formData)
-                .then(res => {
-                  this.setState({lat: res.data.lat});
-                  this.setState({lng: res.data.lng});
-                });
-
-              }
-            }
-          )
-          const smallTranscription = new FormData()
-          smallTranscription.append(
-            "transcription",
-            res.data.toLowerCase(),
-          )
-          axios.post('http://localhost:5000/emergency', smallTranscription)
-          .then(
-            res_emergency => {
-              this.setState({emergency: res_emergency.data.emergency})
-            }
-          )
-        }
+        this.analyzeTranscription();
       });
     };
 
