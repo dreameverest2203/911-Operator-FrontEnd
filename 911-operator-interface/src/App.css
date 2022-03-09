@@ -51,3 +51,7 @@
 #text-margin {
   margin: 1em;
 }
+
+.new-line {
+  white-space: pre-line;
+}
